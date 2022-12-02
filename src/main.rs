@@ -1,3 +1,36 @@
-fn main() {
-    println!("Hello, world!");
+#![allow(dead_code)]
+
+use color_eyre::eyre::Result;
+use linkme::distributed_slice;
+
+mod utils;
+mod solutions {
+    automod::dir!(pub "src/solutions");
+}
+
+#[distributed_slice]
+static SOLUTIONS: [(usize, usize, fn() -> Result<()>)] = [..];
+
+fn main() -> Result<()> {
+    color_eyre::install()?;
+
+    let day = match std::env::args().nth(1) {
+        Some(day) => day.parse::<usize>()?,
+        None => {
+            eprintln!("please pass the day");
+            std::process::exit(1);
+        }
+    };
+
+    let problem = std::env::args()
+        .nth(2)
+        .map(|x| x.parse())
+        .transpose()?
+        .unwrap_or(1);
+
+    SOLUTIONS
+        .iter()
+        .find(|(i, j, _)| *i == day && *j == problem)
+        .unwrap_or_else(|| todo!("day {day} not implemented!"))
+        .2()
 }
