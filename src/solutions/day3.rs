@@ -31,12 +31,12 @@ fn solve2() -> Result<()> {
     let mut res = 0u64;
     for bundle in INPUT.trim().lines().array_chunks() {
         let [one, two, three] = bundle.map(|sack| sack.chars().collect::<HashSet<_>>());
-        let inter: HashSet<_> = one.intersection(&two).cloned().collect();
-        let intersection = inter.intersection(&three).next().unwrap();
+        let common = &(&one & &two) & &three;
+        let intersection = common.into_iter().next().unwrap();
         if intersection.is_uppercase() {
-            res += (*intersection as u8 - b'A') as u64 + 27;
+            res += (intersection as u8 - b'A') as u64 + 27;
         } else {
-            res += (*intersection as u8 - b'a') as u64 + 1;
+            res += (intersection as u8 - b'a') as u64 + 1;
         }
     }
 
