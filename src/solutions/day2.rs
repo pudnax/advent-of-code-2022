@@ -49,17 +49,6 @@ impl From<&str> for Hand {
     }
 }
 
-impl From<char> for Hand {
-    fn from(c: char) -> Self {
-        match c {
-            'A' | 'X' => Self::Rock,
-            'B' | 'Y' => Self::Paper,
-            'C' | 'Z' => Self::Scissors,
-            _ => panic!("Fourth Hand?! Panic!"),
-        }
-    }
-}
-
 fn shake(opponent: Hand, me: Hand) -> u64 {
     use Hand::*;
     let outcome = match (me, opponent) {
@@ -99,17 +88,6 @@ impl From<&str> for Round {
             "X" => Self::Lose,
             "Y" => Self::Draw,
             "Z" => Self::Win,
-            _ => panic!("Fourth Fate?! Panic!"),
-        }
-    }
-}
-
-impl From<char> for Round {
-    fn from(c: char) -> Self {
-        match c {
-            'X' => Self::Lose,
-            'Y' => Self::Draw,
-            'Z' => Self::Win,
             _ => panic!("Fourth Fate?! Panic!"),
         }
     }
