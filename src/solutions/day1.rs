@@ -1,4 +1,4 @@
-use crate::SOLUTIONS;
+use crate::{SolutionKey, SOLUTIONS};
 use std::cmp::Reverse;
 
 use color_eyre::eyre::Result;
@@ -61,6 +61,6 @@ pub fn solve3() -> Result<()> {
 }
 
 #[distributed_slice(SOLUTIONS)]
-static SOLUTION_DAY_01_1: (usize, usize, fn() -> Result<()>) = (1, 1, solve);
+static SOLUTION_DAY_01_1: SolutionKey = (1, 1, solve);
 #[distributed_slice(SOLUTIONS)]
-static SOLUTION_DAY_01_2: (usize, usize, fn() -> Result<()>) = (1, 2, solve3);
+static SOLUTION_DAY_01_2: SolutionKey = (1, 2, solve3);

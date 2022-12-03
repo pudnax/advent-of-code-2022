@@ -1,4 +1,4 @@
-use crate::SOLUTIONS;
+use crate::{SolutionKey, SOLUTIONS};
 
 use color_eyre::eyre::Result;
 use linkme::distributed_slice;
@@ -38,6 +38,17 @@ impl Hand {
     }
 }
 
+impl From<&str> for Hand {
+    fn from(s: &str) -> Self {
+        match s {
+            "A" | "X" => Self::Rock,
+            "B" | "Y" => Self::Paper,
+            "C" | "Z" => Self::Scissors,
+            _ => panic!("Fourth Hand?! Panic!"),
+        }
+    }
+}
+
 impl From<char> for Hand {
     fn from(c: char) -> Self {
         match c {
@@ -65,11 +76,11 @@ fn shake(opponent: Hand, me: Hand) -> u64 {
 pub fn solve() -> Result<()> {
     let mut total = 0;
     for play in INPUT.trim().split('\n') {
-        let mut play = play.chars();
-        let opponent = Hand::from(play.next().unwrap());
-        play.next();
-        let me = Hand::from(play.next().unwrap());
-        total += shake(opponent, me);
+        if let Some((opponent, me)) = play.split_once(' ') {
+            let opponent = Hand::from(opponent);
+            let me = Hand::from(me);
+            total += shake(opponent, me);
+        }
     }
 
     println!("Answer: {total}");
@@ -80,6 +91,17 @@ enum Round {
     Win,
     Draw,
     Lose,
+}
+
+impl From<&str> for Round {
+    fn from(s: &str) -> Self {
+        match s {
+            "X" => Self::Lose,
+            "Y" => Self::Draw,
+            "Z" => Self::Win,
+            _ => panic!("Fourth Fate?! Panic!"),
+        }
+    }
 }
 
 impl From<char> for Round {
@@ -96,15 +118,15 @@ impl From<char> for Round {
 pub fn solve2() -> Result<()> {
     let mut total = 0;
     for play in INPUT.trim().split('\n') {
-        let mut play = play.chars();
-        let opponent = Hand::from(play.next().unwrap());
-        play.next();
-        let round = Round::from(play.next().unwrap());
-        total += match round {
-            Round::Win => shake(opponent, opponent.worst()),
-            Round::Draw => shake(opponent, opponent),
-            Round::Lose => shake(opponent, opponent.best()),
-        };
+        if let Some((opponent, round)) = play.split_once(' ') {
+            let opponent = Hand::from(opponent);
+            let round = Round::from(round);
+            total += match round {
+                Round::Win => shake(opponent, opponent.worst()),
+                Round::Draw => shake(opponent, opponent),
+                Round::Lose => shake(opponent, opponent.best()),
+            };
+        }
     }
 
     println!("Answer: {total}");
@@ -112,6 +134,6 @@ pub fn solve2() -> Result<()> {
 }
 
 #[distributed_slice(SOLUTIONS)]
-static SOLUTION_DAY_02_1: (usize, usize, fn() -> Result<()>) = (2, 1, solve);
+static SOLUTION_DAY_02_1: SolutionKey = (2, 1, solve);
 #[distributed_slice(SOLUTIONS)]
-static SOLUTION_DAY_02_2: (usize, usize, fn() -> Result<()>) = (2, 2, solve2);
+static SOLUTION_DAY_02_2: SolutionKey = (2, 2, solve2);

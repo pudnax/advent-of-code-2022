@@ -8,8 +8,9 @@ mod solutions {
     automod::dir!(pub "src/solutions");
 }
 
+type SolutionKey = (usize, usize, fn() -> Result<()>);
 #[distributed_slice]
-static SOLUTIONS: [(usize, usize, fn() -> Result<()>)] = [..];
+static SOLUTIONS: [SolutionKey] = [..];
 
 fn main() -> Result<()> {
     color_eyre::install()?;
