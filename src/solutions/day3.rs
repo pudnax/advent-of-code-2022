@@ -10,10 +10,10 @@ const INPUT: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/input/day
 fn solve() -> Result<()> {
     let mut res = 0u64;
     for sack in INPUT.trim().lines() {
-        let half = sack.len() / 2;
-        let (l, r) = sack.split_at(half);
-
-        let (l, r): (HashSet<_>, HashSet<_>) = (l.chars().collect(), r.chars().collect());
+        let mid = sack.len() / 2;
+        let (l, r) = sack.split_at(mid);
+        let sack = [l, r];
+        let [l, r] = sack.map(|s| s.chars().collect::<HashSet<_>>());
 
         let intersection = l.intersection(&r).next().unwrap();
         if intersection.is_uppercase() {
