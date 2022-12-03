@@ -12,8 +12,7 @@ fn solve() -> Result<()> {
     for sack in INPUT.trim().lines() {
         let mid = sack.len() / 2;
         let (l, r) = sack.split_at(mid);
-        let sack = [l, r];
-        let [l, r] = sack.map(|s| s.chars().collect::<HashSet<_>>());
+        let [l, r] = [l, r].map(|s| s.chars().collect::<HashSet<_>>());
 
         let intersection = l.intersection(&r).next().unwrap();
         if intersection.is_uppercase() {
@@ -28,16 +27,16 @@ fn solve() -> Result<()> {
 }
 
 fn solve2() -> Result<()> {
-    let mut res = 0u64;
+    let mut res = 0;
     for bundle in INPUT.trim().lines().array_chunks() {
         let [one, two, three] = bundle.map(|sack| sack.chars().collect::<HashSet<_>>());
         let common = &(&one & &two) & &three;
         let intersection = common.into_iter().next().unwrap();
-        if intersection.is_uppercase() {
-            res += (intersection as u8 - b'A') as u64 + 27;
+        res += if intersection.is_uppercase() {
+            (intersection as u8 - b'A') as u64 + 27
         } else {
-            res += (intersection as u8 - b'a') as u64 + 1;
-        }
+            (intersection as u8 - b'a') as u64 + 1
+        };
     }
 
     println!("Answer: {res}");
