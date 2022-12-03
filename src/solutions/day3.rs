@@ -10,8 +10,7 @@ const INPUT: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/input/day
 fn solve() -> Result<()> {
     let mut res = 0u64;
     for sack in INPUT.trim().lines() {
-        let mid = sack.len() / 2;
-        let (l, r) = sack.split_at(mid);
+        let (l, r) = sack.split_at(sack.len() / 2);
         let [l, r] = [l, r].map(|s| s.chars().collect::<HashSet<_>>());
 
         let intersection = l.intersection(&r).next().unwrap();
@@ -28,10 +27,8 @@ fn solve() -> Result<()> {
 
 fn solve2() -> Result<()> {
     let mut res = 0;
-    for bundle in INPUT.trim().lines().array_chunks() {
-        let [one, two, three] = bundle.map(|sack| sack.chars().collect::<HashSet<_>>());
-        let common = &(&one & &two) & &three;
-        let intersection = common.into_iter().next().unwrap();
+    for [a, b, c] in INPUT.trim().lines().array_chunks() {
+        let intersection = a.chars().find(|&x| b.contains(x) && c.contains(x)).unwrap();
         res += if intersection.is_uppercase() {
             (intersection as u8 - b'A') as u64 + 27
         } else {
