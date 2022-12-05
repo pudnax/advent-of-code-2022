@@ -28,20 +28,14 @@ impl TryFrom<&str> for Move {
 }
 
 fn parse_input() -> Result<(Vec<Vec<char>>, Vec<Move>)> {
-    let input = INPUT.lines();
+    let (starter, instructions) = INPUT.split_once("\n\n").unwrap();
     let mut crates = vec![];
+    for line in starter.lines() {
+        crates.push(line.chars().collect::<Vec<_>>());
+    }
     let mut moves = vec![];
-    let mut first_part = true;
-    for line in input {
-        if line.is_empty() {
-            first_part = false;
-            continue;
-        }
-        if first_part {
-            crates.push(line.chars().collect::<Vec<_>>());
-        } else {
-            moves.push(Move::try_from(line)?);
-        }
+    for line in instructions.lines() {
+        moves.push(Move::try_from(line)?);
     }
 
     let [_, n] = [crates[0].len(), crates.len()];
