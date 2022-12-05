@@ -36,11 +36,9 @@ fn parse_input() -> Result<(Vec<Vec<char>>, Vec<Move>)> {
 
     let [_, n] = [crates[0].len(), crates.len()];
     let mut stacks = vec![];
-    for i in 0..9 {
-        let i = 1 + i * 4;
+    for i in (0..9).map(|i| 1 + i * 4) {
         let mut stack = vec![];
-        for j in 1..n {
-            let j = n - (j + 1);
+        for j in (1..n).map(|j| n - (j + 1)) {
             if crates[j][i].is_whitespace() {
                 break;
             }
@@ -56,33 +54,34 @@ fn solve() -> Result<()> {
     let (mut stacks, moves) = parse_input()?;
     for m in moves {
         for _ in 0..m.val {
-            let c = stacks[m.from].pop().unwrap();
-            stacks[m.to].push(c);
+            if let Some(c) = stacks[m.from].pop() {
+                stacks[m.to].push(c);
+            }
         }
     }
-    for stack in stacks {
-        print!("{}", stack.last().unwrap());
-    }
-    println!();
+    let res = stacks
+        .into_iter()
+        .filter_map(|stack| stack.last().cloned())
+        .collect::<String>();
+    println!("Answer: {res}");
     Ok(())
 }
 
 fn solve2() -> Result<()> {
     let (mut stacks, moves) = parse_input()?;
+    let mut buf = vec![];
     for m in moves {
-        let mut temp = vec![];
-        for _ in 0..m.val {
-            let c = stacks[m.from].pop().unwrap();
-            temp.push(c);
-        }
-        for c in temp.into_iter().rev() {
-            stacks[m.to].push(c);
-        }
+        let pos = stacks[m.from].len() - m.val;
+        buf.extend(stacks[m.from].drain(pos..));
+        stacks[m.to].extend(buf.iter().cloned());
+        buf.clear();
     }
-    for stack in stacks {
-        print!("{}", stack.last().unwrap());
-    }
-    println!();
+
+    let res = stacks
+        .into_iter()
+        .filter_map(|stack| stack.last().cloned())
+        .collect::<String>();
+    println!("Answer: {res}");
     Ok(())
 }
 
