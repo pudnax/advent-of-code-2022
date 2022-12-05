@@ -63,6 +63,7 @@ fn solve() -> Result<()> {
     for stack in stacks {
         print!("{}", stack.last().unwrap());
     }
+    println!();
     Ok(())
 }
 
@@ -81,6 +82,7 @@ fn solve2() -> Result<()> {
     for stack in stacks {
         print!("{}", stack.last().unwrap());
     }
+    println!();
     Ok(())
 }
 
