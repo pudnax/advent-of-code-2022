@@ -52,11 +52,10 @@ fn parse_input() -> Result<(Vec<Vec<char>>, Vec<Move>)> {
 
 fn solve() -> Result<()> {
     let (mut stacks, moves) = parse_input()?;
-    for m in moves {
-        for _ in 0..m.val {
-            if let Some(c) = stacks[m.from].pop() {
-                stacks[m.to].push(c);
-            }
+    for Move { from, to, val } in moves {
+        for _ in 0..val {
+            let elem = stacks[from].pop();
+            stacks[to].extend(elem);
         }
     }
     let res = stacks
@@ -69,12 +68,16 @@ fn solve() -> Result<()> {
 
 fn solve2() -> Result<()> {
     let (mut stacks, moves) = parse_input()?;
-    let mut buf = vec![];
-    for m in moves {
-        let pos = stacks[m.from].len() - m.val;
-        buf.extend(stacks[m.from].drain(pos..));
-        stacks[m.to].extend(buf.iter().cloned());
-        buf.clear();
+
+    for Move { from, to, val } in moves {
+        let mut stack_to = std::mem::take(&mut stacks[to]);
+        let stealed = {
+            let stack = &mut stacks[from];
+            let pos = stack.len() - val;
+            stack.drain(pos..)
+        };
+        stack_to.extend(stealed);
+        stacks[to] = stack_to;
     }
 
     let res = stacks
