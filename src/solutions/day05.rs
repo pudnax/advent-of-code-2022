@@ -15,13 +15,12 @@ struct Move {
 impl TryFrom<&str> for Move {
     type Error = color_eyre::Report;
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let mut words = value.split_whitespace();
-        words.next();
-        let val = words.next().unwrap().parse()?;
-        words.next();
-        let from = words.next().unwrap().parse::<usize>()? - 1;
-        words.next();
-        let to = words.next().unwrap().parse::<usize>()? - 1;
+        let mut words = value
+            .split_whitespace()
+            .filter_map(|x| x.parse::<usize>().ok());
+        let val = words.next().unwrap();
+        let from = words.next().unwrap() - 1;
+        let to = words.next().unwrap() - 1;
 
         Ok(Self { from, to, val })
     }
@@ -29,14 +28,11 @@ impl TryFrom<&str> for Move {
 
 fn parse_input() -> Result<(Vec<Vec<char>>, Vec<Move>)> {
     let (starter, instructions) = INPUT.split_once("\n\n").unwrap();
-    let mut crates = vec![];
-    for line in starter.lines() {
-        crates.push(line.chars().collect::<Vec<_>>());
-    }
-    let mut moves = vec![];
-    for line in instructions.lines() {
-        moves.push(Move::try_from(line)?);
-    }
+    let crates: Vec<Vec<_>> = starter.lines().map(|l| l.chars().collect()).collect();
+    let moves = instructions
+        .lines()
+        .map(Move::try_from)
+        .collect::<Result<Vec<_>>>()?;
 
     let [_, n] = [crates[0].len(), crates.len()];
     let mut stacks = vec![];
