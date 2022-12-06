@@ -11,17 +11,17 @@ fn position_of_unique(s: &str, n: usize) -> Option<usize> {
     s.as_bytes()
         .windows(n)
         .position(|arr| HashSet::<u8>::from_iter(arr.iter().copied()).len() == n)
-        .map(|n| n + n)
+        .map(|x| x + n)
 }
 
 fn solve() -> Result<()> {
-    let res = position_of_unique(INPUT, 4).unwrap_or(0);
+    let res = position_of_unique(INPUT, 4).unwrap_or(INPUT.len());
     println!("Answer: {res}");
     Ok(())
 }
 
 fn solve2() -> Result<()> {
-    let res = position_of_unique(INPUT, 14).unwrap_or(0);
+    let res = position_of_unique(INPUT, 14).unwrap_or(INPUT.len());
     println!("Answer: {res}");
     Ok(())
 }
