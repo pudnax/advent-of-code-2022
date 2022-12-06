@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 #![feature(iter_array_chunks)]
+#![feature(array_chunks)]
+#![feature(array_windows)]
 
 use color_eyre::eyre::Result;
 use linkme::distributed_slice;
