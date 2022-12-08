@@ -7,10 +7,22 @@ use linkme::distributed_slice;
 
 const INPUT: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/input/day6"));
 
+fn position_of_unique_set(s: &str, n: usize) -> Option<usize> {
+    s.as_bytes()
+        .windows(n)
+        .position(|window| HashSet::<u8>::from_iter(window.iter().copied()).len() == n)
+        .map(|x| x + n)
+}
+
 fn position_of_unique(s: &str, n: usize) -> Option<usize> {
     s.as_bytes()
         .windows(n)
-        .position(|arr| HashSet::<u8>::from_iter(arr.iter().copied()).len() == n)
+        .position(|arr| {
+            arr.iter()
+                .copied()
+                .enumerate()
+                .all(|(i, b)| arr.iter().copied().skip(i + 1).all(|b2| b != b2))
+        })
         .map(|x| x + n)
 }
 
